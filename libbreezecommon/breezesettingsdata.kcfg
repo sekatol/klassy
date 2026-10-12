@@ -922,9 +922,15 @@
         <default>true</default>
     </entry>
 
-    <!-- blur transparent titlebars -->
-    <entry name="BlurTransparentTitleBars" type = "Bool">
-        <default>true</default>
+    <!-- blur transparent titlebars. BlurNone = never blur, BlurTitleBar = blur the titlebar/Header area only,
+         BlurEntireWindow = blur (and draw the translucent titlebar colour over) the entire window -->
+    <entry name="BlurTransparentTitleBars" type = "Enum">
+      <choices>
+          <choice name="BlurNone" />
+          <choice name="BlurTitleBar" />
+          <choice name="BlurEntireWindow" />
+      </choices>
+      <default>BlurEntireWindow</default>
     </entry>
 
     <!-- Apply titlebar opacity settings to entire Header area -->

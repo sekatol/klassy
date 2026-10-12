@@ -2008,20 +2008,23 @@ void Style::drawToolsAreaBackgroundAndSeparator(QPainter *painter, const QWidget
 
     QBrush color = _toolsAreaManager->palette().brush(w->isActiveWindow() ? QPalette::Active : QPalette::Inactive, QPalette::Window);
 
-    // KLASSY: the header background is drawn over the entire window instead of only over the tools/header area.
-    // "rect" (the tools area geometry) is still used below for the separator line.
-    const QRect backgroundRect(w->rect());
+    const int blurMode = _helper->decorationConfig()->blurTransparentTitleBars();
+
+    // KLASSY: "Blur entire window" draws the translucent titlebar colour over the entire window, otherwise it is
+    // drawn over the tools/header area only. "rect" (the tools area geometry) is also used below for the separator line.
+    const bool blurEntireWindow = (blurMode == InternalSettings::EnumBlurTransparentTitleBars::BlurEntireWindow);
+    const QRect backgroundRect = blurEntireWindow ? w->rect() : rect;
 
     if (_helper->decorationConfig()->applyOpacityToHeader() && color.color().alpha() < 255) {
         if ((w->isMaximized() || w->isFullScreen()) && _helper->decorationConfig()->opaqueMaximizedTitleBars()) {
             QColor colorWithoutAlpha = color.color();
             colorWithoutAlpha.setAlpha(255);
             color.setColor(colorWithoutAlpha);
-        } else if (_helper->decorationConfig()->blurTransparentTitleBars()) { // apply blur to the whole window
+        } else if (blurMode != InternalSettings::EnumBlurTransparentTitleBars::BlurNone) { // apply blur
             if ((w->testAttribute(Qt::WA_WState_Created) || w->internalWinId())) {
                 // PAM: modified from breezeblurhelper.cpp -- did not use _blurHelper->registerWidget() as it doesn't allow you to specify a region.
-                // Note: the blur region now spans the entire window, so the kornerbug this used to avoid (blur bleeding past rounded window corners) can
-                // reappear.
+                // The blur region is limited to the tools/header area unless the user has selected "Blur entire window", as blurring the
+                // entire window can bleed past rounded window corners (kornerbug).
                 w->winId(); // force creation of the window handle
                 KWindowEffects::enableBlurBehind(w->windowHandle(), true, backgroundRect);
 

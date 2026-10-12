@@ -96,7 +96,7 @@ It is recommended to first try the bundled Presets in Klassy Settings before any
 ![Screenshot of Alignment & Spacing tab](screenshots/alignment_and_spacing.png "Screenshot of Alignment & Spacing tab")
 >(Above Preset: _Klassy_)
 
-* Transparency/opacity configurable for both active/inactive titlebars/headers; setting to make maximized windows opaque; blur is configurable.
+* Transparency/opacity configurable for both active/inactive titlebars/headers; setting to make maximized windows opaque; blur configurable as none, titlebar/header area only, or the entire window.
 
 * Configurable thin window outline with optional accent colours:
 

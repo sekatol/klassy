@@ -336,11 +336,43 @@
        </widget>
       </item>
       <item row="3" column="0">
-       <widget class="QCheckBox" name="blurTransparentTitleBars">
-        <property name="text">
-         <string>Blur titlebars that have transparency</string>
-        </property>
-       </widget>
+       <layout class="QHBoxLayout" name="blurTransparentTitleBarsLayout">
+        <item>
+         <widget class="QLabel" name="blurTransparentTitleBarsLabel">
+          <property name="text">
+           <string>Blur transparent titlebars:</string>
+          </property>
+          <property name="buddy">
+           <cstring>blurTransparentTitleBars</cstring>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QComboBox" name="blurTransparentTitleBars">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <item>
+           <property name="text">
+            <string>No blur</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Blur titlebar only</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Blur entire window</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+       </layout>
       </item>
       <item row="5" column="0">
        <spacer name="verticalSpacer_9">

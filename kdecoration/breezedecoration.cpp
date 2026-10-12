@@ -2026,15 +2026,14 @@ void Decoration::updateOpaque()
 
 void Decoration::updateBlur()
 {
-    // disable blur if the titlebar is opaque
-    if (isOpaqueTitleBar()) { // opaque titlebar colours
+    const bool blurDisabled = (m_internalSettings->blurTransparentTitleBars() == InternalSettings::EnumBlurTransparentTitleBars::BlurNone);
+
+    // disable blur if the titlebar is opaque, or if the user has selected "No blur"
+    if (isOpaqueTitleBar() || blurDisabled) {
         setBlurRegion(QRegion());
-    } else { // transparent titlebar colours
-        if (m_internalSettings->blurTransparentTitleBars()) { // enable blur
-            QRectF rectEnlarged = rect().adjusted(-1, -1, 1, 1);
-            setBlurRegion(QRegion(rectEnlarged.toRect()));
-        } else
-            setBlurRegion(QRegion());
+    } else { // transparent titlebar colours and blur enabled
+        QRectF rectEnlarged = rect().adjusted(-1, -1, 1, 1);
+        setBlurRegion(QRegion(rectEnlarged.toRect()));
     }
 }
 
