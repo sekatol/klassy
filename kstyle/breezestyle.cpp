@@ -2008,17 +2008,22 @@ void Style::drawToolsAreaBackgroundAndSeparator(QPainter *painter, const QWidget
 
     QBrush color = _toolsAreaManager->palette().brush(w->isActiveWindow() ? QPalette::Active : QPalette::Inactive, QPalette::Window);
 
+    // KLASSY: the header background is drawn over the entire window instead of only over the tools/header area.
+    // "rect" (the tools area geometry) is still used below for the separator line.
+    const QRect backgroundRect(w->rect());
+
     if (_helper->decorationConfig()->applyOpacityToHeader() && color.color().alpha() < 255) {
         if ((w->isMaximized() || w->isFullScreen()) && _helper->decorationConfig()->opaqueMaximizedTitleBars()) {
             QColor colorWithoutAlpha = color.color();
             colorWithoutAlpha.setAlpha(255);
             color.setColor(colorWithoutAlpha);
-        } else if (_helper->decorationConfig()->blurTransparentTitleBars()) { // apply blur to tools area
+        } else if (_helper->decorationConfig()->blurTransparentTitleBars()) { // apply blur to the whole window
             if ((w->testAttribute(Qt::WA_WState_Created) || w->internalWinId())) {
-                // PAM: modified from breezeblurhelper.cpp -- did not use _blurHelper->registerWidget() as it doesn't allow you to specify a region, hence
-                // blurring the entire window and causing kornerbug
+                // PAM: modified from breezeblurhelper.cpp -- did not use _blurHelper->registerWidget() as it doesn't allow you to specify a region.
+                // Note: the blur region now spans the entire window, so the kornerbug this used to avoid (blur bleeding past rounded window corners) can
+                // reappear.
                 w->winId(); // force creation of the window handle
-                KWindowEffects::enableBlurBehind(w->windowHandle(), true, rect);
+                KWindowEffects::enableBlurBehind(w->windowHandle(), true, backgroundRect);
 
                 // no force update at this point like in breezeblurhelper.cpp, as already drawing next and creates an infinite loop
             }
@@ -2026,7 +2031,7 @@ void Style::drawToolsAreaBackgroundAndSeparator(QPainter *painter, const QWidget
     }
     painter->setPen(Qt::NoPen);
     painter->setBrush(color);
-    painter->drawRect(rect);
+    painter->drawRect(backgroundRect);
 
     // default Painter composition mode from previous function may be CompositionMode_Source
     painter->setCompositionMode(QPainter::CompositionMode_SourceOver);
